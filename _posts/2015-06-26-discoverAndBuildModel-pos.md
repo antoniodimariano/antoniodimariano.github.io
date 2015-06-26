@@ -51,11 +51,30 @@ I will take a look at models by instance introspection in the next posts.
 ## Code Snippets
 
 {% highlight css %}
-#container {
-  float: left;
-  margin: 0 -240px 0 0;
-  width: 100%;
-}
+
+var path = require('path');
+var app = require(path.resolve(__dirname, '../server'));
+
+var repoDB = app.dataSources.repoDB;
+repoDB.discoverAndBuildModels('verga', {schema: 'public'},
+  function(err,models){
+    if(err) throw err;
+    console.log(typeof models);
+    var nomeModello = 'Verga';
+    var mymodel = app.model(models[nomeModello]);
+
+    mymodel.find(function(err,records){
+      if(err) throw err;
+      console.log('Records:',records);
+    })
+    var models = app.models();
+
+    models.forEach(function(Model) {
+      console.log(Model.modelName); // Abbiamo la lista dei modelli e vedremo pure Verga
+    });
+        repoDB.disconnect();
+  })
+
 {% endhighlight %}
 
    
